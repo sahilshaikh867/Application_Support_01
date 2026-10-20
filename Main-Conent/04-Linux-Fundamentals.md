@@ -2670,4 +2670,66 @@ Linux Troubleshooting
 
 The detailed hands-on learning will now happen inside the **12 separate Linux submodules** listed above.
 
-> **Next:** `04.1-Linux-Basics.md`
+## 📚 Linux Submodules
+
+The Linux Fundamentals module is divided into smaller submodules so that each topic can be learned and practiced separately.
+
+### 4.1 Linux Basics
+Introduction to Linux commands, terminal, CLI, shells, Bash, command structure, paths, navigation, and basic Linux operations.
+
+➡️ [Go to Linux Basics](./4.1-Linux-Basics/README.md)
+
+### 4.2 User & Group Management
+Learn how Linux manages users and groups, including creating, modifying, deleting users/groups and managing memberships.
+
+➡️ [Go to User & Group Management](./4.2-User-Group-Management/README.md)
+
+### 4.3 Permissions & Ownership
+Learn Linux file ownership, read/write/execute permissions, `chmod`, `chown`, `chgrp`, special permissions, and practical permission management.
+
+➡️ [Go to Permissions & Ownership](./4.3-Permissions-Ownership/README.md)
+
+### 4.4 Network Management
+Learn Linux networking fundamentals, IP addresses, interfaces, ports, DNS, connectivity testing, and basic network troubleshooting.
+
+➡️ [Go to Network Management](./4.4-Network-Management/README.md)
+
+### 4.5 Process & Task Management
+Learn processes, jobs, foreground/background tasks, signals, process monitoring, killing processes, and cron jobs.
+
+➡️ [Go to Process & Task Management](./4.5-Process-Task-Management/README.md)
+
+### 4.6 File & Directory Management
+Learn how to create, copy, move, rename, delete, search, and manage files and directories in Linux.
+
+➡️ [Go to File & Directory Management](./4.6-File-Directory-Management/README.md)
+
+### 4.7 Services & Systemd
+Learn Linux services, systemd, service lifecycle, starting/stopping/restarting services, enabling services, and troubleshooting service failures.
+
+➡️ [Go to Services & Systemd](./4.7-Services-Systemd/README.md)
+
+### 4.8 Package Management
+Learn how Linux software packages work and how to install, update, remove, and manage packages using package managers.
+
+➡️ [Go to Package Management](./4.8-Package-Management/README.md)
+
+### 4.9 Environment Variables & Shell
+Learn environment variables, shell configuration, `PATH`, shell profiles, Bash configuration, and how applications use environment variables.
+
+➡️ [Go to Environment Variables & Shell](./4.9-Environment-Variables-Shell/README.md)
+
+### 4.10 Shell Scripting Fundamentals
+Learn Bash scripting fundamentals including variables, conditions, loops, functions, arguments, exit codes, and practical automation scripts.
+
+➡️ [Go to Shell Scripting Fundamentals](./4.10-Shell-Scripting/README.md)
+
+### 4.11 SSH, SCP & Remote Server Management
+Learn how Application Support engineers connect to Linux servers, transfer files, execute remote commands, and manage remote systems.
+
+➡️ [Go to SSH, SCP & Remote Server Management](./4.11-SSH-SCP-Remote-Management/README.md)
+
+### 4.12 Linux Troubleshooting
+Learn a practical Linux troubleshooting methodology for CPU, memory, disk, network, processes, services, logs, and application issues.
+
+➡️ [Go to Linux Troubleshooting](./4.12-Linux-Troubleshooting/README.md)
