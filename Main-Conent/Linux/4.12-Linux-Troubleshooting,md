@@ -1,0 +1,2787 @@
+# 🐧 Linux Troubleshooting
+
+> **Module 4 → 4.12 Linux Troubleshooting**
+
+Linux troubleshooting is one of the most important skills for an **Application Support Engineer, DevOps Engineer, Cloud Engineer, and System Administrator**.
+
+In a real production environment, applications can fail for many different reasons:
+
+- Server is down
+- CPU is high
+- Memory is exhausted
+- Disk is full
+- Application process stopped
+- Service failed
+- Port is not listening
+- Network is unavailable
+- DNS is not resolving
+- File permissions are wrong
+- Application logs contain errors
+- Database connection is failing
+- Configuration is incorrect
+- A recent deployment introduced a problem
+
+The goal of troubleshooting is not to randomly run commands.
+
+The goal is:
+
+```text
+Understand
+   ↓
+Collect Evidence
+   ↓
+Identify the Problem
+   ↓
+Find the Root Cause
+   ↓
+Take Safe Action
+   ↓
+Validate
+   ↓
+Document
+```
+
+---
+
+# 📚 Table of Contents
+
+1. [What is Troubleshooting?](#1-what-is-troubleshooting)
+2. [Why Linux Troubleshooting Matters](#2-why-linux-troubleshooting-matters)
+3. [Troubleshooting Mindset](#3-troubleshooting-mindset)
+4. [The Troubleshooting Lifecycle](#4-the-troubleshooting-lifecycle)
+5. [Step 1 — Understand the Problem](#5-step-1--understand-the-problem)
+6. [Step 2 — Check Server Availability](#6-step-2--check-server-availability)
+7. [Step 3 — Check System Information](#7-step-3--check-system-information)
+8. [Step 4 — Check CPU](#8-step-4--check-cpu)
+9. [Step 5 — Check Memory](#9-step-5--check-memory)
+10. [Step 6 — Check Disk](#10-step-6--check-disk)
+11. [Step 7 — Check Processes](#11-step-7--check-processes)
+12. [Step 8 — Check Services](#12-step-8--check-services)
+13. [Step 9 — Check Ports](#13-step-9--check-ports)
+14. [Step 10 — Check Network](#14-step-10--check-network)
+15. [Step 11 — Check DNS](#15-step-11--check-dns)
+16. [Step 12 — Check Logs](#16-step-12--check-logs)
+17. [Step 13 — Check File Permissions](#17-step-13--check-file-permissions)
+18. [Step 14 — Check Environment Variables](#18-step-14--check-environment-variables)
+19. [Step 15 — Check Recent Changes](#19-step-15--check-recent-changes)
+20. [Application Troubleshooting](#20-application-troubleshooting)
+21. [High CPU Troubleshooting](#21-high-cpu-troubleshooting)
+22. [High Memory Troubleshooting](#22-high-memory-troubleshooting)
+23. [Disk Full Troubleshooting](#23-disk-full-troubleshooting)
+24. [Service Down Troubleshooting](#24-service-down-troubleshooting)
+25. [Port Not Listening](#25-port-not-listening)
+26. [Connection Refused](#26-connection-refused)
+27. [Connection Timeout](#27-connection-timeout)
+28. [DNS Problems](#28-dns-problems)
+29. [Permission Problems](#29-permission-problems)
+30. [Application Log Errors](#30-application-log-errors)
+31. [Process Problems](#31-process-problems)
+32. [Database Connectivity Problems](#32-database-connectivity-problems)
+33. [Slow Application Troubleshooting](#33-slow-application-troubleshooting)
+34. [Production Troubleshooting Example](#34-production-troubleshooting-example)
+35. [Troubleshooting Decision Tree](#35-troubleshooting-decision-tree)
+36. [Important Linux Troubleshooting Commands](#36-important-linux-troubleshooting-commands)
+37. [Practical Lab](#37-practical-lab)
+38. [Production Incident Simulation](#38-production-incident-simulation)
+39. [Troubleshooting Ticket Template](#39-troubleshooting-ticket-template)
+40. [Practice Tasks](#40-practice-tasks)
+41. [Common Troubleshooting Mistakes](#41-common-troubleshooting-mistakes)
+42. [Production Safety Rules](#42-production-safety-rules)
+43. [Quick Revision](#43-quick-revision)
+44. [Learning Outcomes](#44-learning-outcomes)
+45. [Linux Fundamentals Complete](#45-linux-fundamentals-complete)
+
+---
+
+# 1. What is Troubleshooting?
+
+**Troubleshooting** is the systematic process of finding and resolving a problem.
+
+For example:
+
+> Application is not working.
+
+This statement is not enough.
+
+We need to investigate.
+
+Maybe:
+
+```text
+Application
+     ↓
+Process
+     ↓
+Service
+     ↓
+Port
+     ↓
+Network
+     ↓
+Server
+     ↓
+Database
+```
+
+We need to identify where the failure is occurring.
+
+---
+
+# 2. Why Linux Troubleshooting Matters
+
+Many production applications run on Linux.
+
+For example:
+
+```text
+User
+  ↓
+Load Balancer
+  ↓
+Linux Application Server
+  ↓
+Linux Database Server
+  ↓
+Storage
+```
+
+If the application becomes unavailable, the support engineer may need to investigate the Linux server.
+
+Typical questions:
+
+```text
+Is the server reachable?
+
+Is the application running?
+
+Is the service running?
+
+Is the port listening?
+
+Is CPU high?
+
+Is memory available?
+
+Is disk full?
+
+Are there errors in logs?
+
+Can the application connect to the database?
+
+Did someone recently change something?
+```
+
+---
+
+# 3. Troubleshooting Mindset
+
+A beginner often does this:
+
+```text
+Application not working
+        ↓
+Restart service
+        ↓
+Still not working
+        ↓
+Restart server
+        ↓
+Still not working
+```
+
+This is not good troubleshooting.
+
+A professional approach is:
+
+```text
+Problem
+  ↓
+Evidence
+  ↓
+Hypothesis
+  ↓
+Test
+  ↓
+Result
+  ↓
+Root Cause
+  ↓
+Safe Fix
+  ↓
+Validation
+```
+
+---
+
+# 4. The Troubleshooting Lifecycle
+
+A useful troubleshooting lifecycle is:
+
+```text
+1. Understand
+      ↓
+2. Reproduce / Confirm
+      ↓
+3. Collect Evidence
+      ↓
+4. Narrow Down
+      ↓
+5. Identify Root Cause
+      ↓
+6. Fix
+      ↓
+7. Validate
+      ↓
+8. Document
+```
+
+---
+
+# 5. Step 1 — Understand the Problem
+
+Before running commands, understand the incident.
+
+Ask:
+
+### What happened?
+
+Example:
+
+```text
+Application is unavailable.
+```
+
+### When did it happen?
+
+```text
+10:30 AM
+```
+
+### Who is affected?
+
+```text
+All customers
+```
+
+or:
+
+```text
+Only some users
+```
+
+### What changed?
+
+Check:
+
+- Deployment
+- Configuration
+- Package update
+- Infrastructure change
+- Database change
+- Network change
+
+### Is it reproducible?
+
+Try to verify the problem.
+
+---
+
+# 6. Step 2 — Check Server Availability
+
+First determine whether the server is reachable.
+
+From another machine:
+
+```bash
+ping SERVER_IP
+```
+
+Example:
+
+```bash
+ping 10.10.20.50
+```
+
+However, remember:
+
+> Ping can fail even when SSH or an application is reachable because ICMP may be blocked.
+
+So also test the actual required port.
+
+```bash
+nc -vz 10.10.20.50 22
+```
+
+For an application:
+
+```bash
+nc -vz 10.10.20.50 8080
+```
+
+---
+
+# 7. Step 3 — Check System Information
+
+After connecting:
+
+```bash
+hostname
+```
+
+```bash
+hostnamectl
+```
+
+Check kernel:
+
+```bash
+uname -a
+```
+
+Check uptime:
+
+```bash
+uptime
+```
+
+Check logged-in users:
+
+```bash
+who
+```
+
+Check current user:
+
+```bash
+whoami
+```
+
+Check OS information:
+
+```bash
+cat /etc/os-release
+```
+
+---
+
+# 8. Step 4 — Check CPU
+
+High CPU can make applications slow or unavailable.
+
+Start with:
+
+```bash
+top
+```
+
+or:
+
+```bash
+htop
+```
+
+Check CPU information:
+
+```bash
+lscpu
+```
+
+Check load:
+
+```bash
+uptime
+```
+
+Example:
+
+```text
+load average: 8.50, 7.20, 6.80
+```
+
+Load average should be interpreted relative to the number of CPU cores and workload.
+
+---
+
+## Find CPU-Heavy Processes
+
+```bash
+ps aux --sort=-%cpu | head
+```
+
+Example:
+
+```text
+USER    PID   %CPU
+app     1234  95.2
+root    2345  40.1
+```
+
+The application process may be consuming excessive CPU.
+
+---
+
+# 9. Step 5 — Check Memory
+
+Check memory:
+
+```bash
+free -h
+```
+
+Example:
+
+```text
+               total   used   free
+Mem:           16Gi    14Gi   500Mi
+```
+
+Check processes:
+
+```bash
+ps aux --sort=-%mem | head
+```
+
+---
+
+## Important Concept
+
+Do not assume:
+
+```text
+free = available memory
+```
+
+Linux uses memory for:
+
+- Processes
+- Cache
+- Buffers
+- Kernel
+- Other system functions
+
+`free -h` provides a more useful overview.
+
+---
+
+# 10. Step 6 — Check Disk
+
+Check filesystem usage:
+
+```bash
+df -h
+```
+
+Example:
+
+```text
+Filesystem      Size  Used Avail Use%
+/dev/sda1        50G   49G  500M  99%
+```
+
+A filesystem at 99% usage is a serious problem.
+
+---
+
+## Find Large Directories
+
+```bash
+du -sh /*
+```
+
+Better:
+
+```bash
+du -sh /var/* 2>/dev/null
+```
+
+For logs:
+
+```bash
+du -sh /var/log/*
+```
+
+Find large files:
+
+```bash
+find /var -type f -size +500M 2>/dev/null
+```
+
+---
+
+# 11. Step 7 — Check Processes
+
+List processes:
+
+```bash
+ps aux
+```
+
+Another format:
+
+```bash
+ps -ef
+```
+
+Find an application:
+
+```bash
+ps aux | grep myapp
+```
+
+Better:
+
+```bash
+pgrep -af myapp
+```
+
+Process tree:
+
+```bash
+pstree
+```
+
+---
+
+## Important Questions
+
+Ask:
+
+```text
+Is the process running?
+
+Who owns it?
+
+What PID does it have?
+
+How much CPU is it using?
+
+How much memory is it using?
+
+What command started it?
+```
+
+---
+
+# 12. Step 8 — Check Services
+
+Check a service:
+
+```bash
+systemctl status myapp
+```
+
+Check failed services:
+
+```bash
+systemctl --failed
+```
+
+Start:
+
+```bash
+sudo systemctl start myapp
+```
+
+Restart:
+
+```bash
+sudo systemctl restart myapp
+```
+
+But:
+
+> Never restart a production service just because it is the first command you remember.
+
+First investigate.
+
+---
+
+## Check Service Logs
+
+```bash
+journalctl -u myapp -n 100
+```
+
+Follow:
+
+```bash
+journalctl -u myapp -f
+```
+
+---
+
+# 13. Step 9 — Check Ports
+
+Applications normally listen on network ports.
+
+Check:
+
+```bash
+ss -lntp
+```
+
+Example:
+
+```text
+LISTEN 0 128 0.0.0.0:8080
+```
+
+This tells us something is listening on port `8080`.
+
+Search for a specific port:
+
+```bash
+ss -lntp | grep ':8080'
+```
+
+---
+
+# 14. Step 10 — Check Network
+
+Check interfaces:
+
+```bash
+ip addr
+```
+
+Check routes:
+
+```bash
+ip route
+```
+
+Check connectivity:
+
+```bash
+ping 8.8.8.8
+```
+
+Check gateway:
+
+```bash
+ip route
+```
+
+Check network connections:
+
+```bash
+ss -ant
+```
+
+---
+
+## Network Troubleshooting Sequence
+
+```text
+Interface
+   ↓
+IP Address
+   ↓
+Route
+   ↓
+Gateway
+   ↓
+DNS
+   ↓
+Remote Host
+   ↓
+Application Port
+```
+
+---
+
+# 15. Step 11 — Check DNS
+
+Test hostname resolution:
+
+```bash
+nslookup example.com
+```
+
+or:
+
+```bash
+dig example.com
+```
+
+or:
+
+```bash
+host example.com
+```
+
+Test:
+
+```bash
+getent hosts example.com
+```
+
+---
+
+## Example Problem
+
+Application tries:
+
+```text
+database.company.internal
+```
+
+but DNS cannot resolve it.
+
+Test:
+
+```bash
+nslookup database.company.internal
+```
+
+If resolution fails, investigate DNS before changing application configuration.
+
+---
+
+# 16. Step 12 — Check Logs
+
+Logs are one of the most important troubleshooting sources.
+
+Common locations:
+
+```text
+/var/log/
+```
+
+List logs:
+
+```bash
+ls -lh /var/log/
+```
+
+View:
+
+```bash
+less /var/log/syslog
+```
+
+On some RHEL-family systems:
+
+```bash
+less /var/log/messages
+```
+
+Application-specific logs may be somewhere like:
+
+```text
+/var/log/myapp/
+```
+
+---
+
+## Search Logs
+
+Use:
+
+```bash
+grep "ERROR" application.log
+```
+
+Case-insensitive:
+
+```bash
+grep -i "error" application.log
+```
+
+Search multiple keywords:
+
+```bash
+grep -Ei "error|failed|exception" application.log
+```
+
+---
+
+## Follow Live Logs
+
+```bash
+tail -f application.log
+```
+
+This is useful when reproducing a problem.
+
+---
+
+# 17. Step 13 — Check File Permissions
+
+A service may fail because it cannot read or write a file.
+
+Check:
+
+```bash
+ls -l /path/to/file
+```
+
+Example:
+
+```text
+-rw-r----- 1 appuser appgroup application.conf
+```
+
+Check directory:
+
+```bash
+ls -ld /path/to/directory
+```
+
+Check ownership:
+
+```bash
+stat /path/to/file
+```
+
+Change ownership only when appropriate:
+
+```bash
+sudo chown appuser:appgroup /path/to/file
+```
+
+Change permissions only after understanding the requirement:
+
+```bash
+sudo chmod 640 /path/to/file
+```
+
+---
+
+# 18. Step 14 — Check Environment Variables
+
+An application may depend on environment variables.
+
+Check:
+
+```bash
+env
+```
+
+Specific variable:
+
+```bash
+echo $JAVA_HOME
+```
+
+Check PATH:
+
+```bash
+echo $PATH
+```
+
+Check shell:
+
+```bash
+echo $SHELL
+```
+
+---
+
+## Common Production Problem
+
+The application works manually:
+
+```bash
+./start.sh
+```
+
+but fails through systemd.
+
+Why?
+
+The environment may be different.
+
+For example:
+
+```text
+Manual Shell
+   ↓
+JAVA_HOME exists
+   ↓
+Application works
+
+systemd
+   ↓
+JAVA_HOME missing
+   ↓
+Application fails
+```
+
+This is why environment troubleshooting is important.
+
+---
+
+# 19. Step 15 — Check Recent Changes
+
+One of the most useful troubleshooting questions is:
+
+> **What changed?**
+
+Check:
+
+- Application deployment
+- Configuration
+- Package updates
+- Server changes
+- DNS changes
+- Firewall changes
+- Database changes
+- Certificate changes
+- Environment variables
+- Infrastructure changes
+
+A useful production principle is:
+
+```text
+Problem started after Change
+             ↓
+Investigate Change
+```
+
+But do not automatically assume the latest change is the root cause. Verify it with evidence.
+
+---
+
+# 20. Application Troubleshooting
+
+A typical application stack:
+
+```text
+User
+ ↓
+DNS
+ ↓
+Load Balancer
+ ↓
+Web Server
+ ↓
+Application
+ ↓
+Database
+ ↓
+External Services
+```
+
+If the user reports:
+
+```text
+Application not working
+```
+
+we should troubleshoot layer by layer.
+
+---
+
+# 21. High CPU Troubleshooting
+
+## Symptom
+
+Application is slow.
+
+Check:
+
+```bash
+top
+```
+
+Then:
+
+```bash
+ps aux --sort=-%cpu | head
+```
+
+Find process:
+
+```bash
+pgrep -af myapp
+```
+
+Check process details:
+
+```bash
+ps -p PID -o pid,ppid,user,%cpu,%mem,etime,cmd
+```
+
+---
+
+## Questions
+
+```text
+Which process is using CPU?
+
+Has CPU increased recently?
+
+Is the process expected to consume CPU?
+
+Is traffic higher than normal?
+
+Is there an infinite loop?
+
+Did a deployment happen?
+
+Are multiple instances affected?
+```
+
+Do not immediately kill the process.
+
+---
+
+# 22. High Memory Troubleshooting
+
+Check:
+
+```bash
+free -h
+```
+
+Then:
+
+```bash
+ps aux --sort=-%mem | head
+```
+
+Find top memory consumers.
+
+Check:
+
+```bash
+top
+```
+
+Possible causes:
+
+- Memory leak
+- Increased traffic
+- Large cache
+- Too many processes
+- Incorrect application configuration
+- Unexpected workload
+
+---
+
+# 23. Disk Full Troubleshooting
+
+## Symptom
+
+Application cannot write files.
+
+Possible error:
+
+```text
+No space left on device
+```
+
+First:
+
+```bash
+df -h
+```
+
+Then:
+
+```bash
+df -i
+```
+
+Why check inode usage?
+
+Because a filesystem can have free disk space but still run out of inodes.
+
+---
+
+## Find Large Directories
+
+```bash
+du -xhd1 /var 2>/dev/null
+```
+
+Then investigate:
+
+```bash
+du -xhd1 /var/log 2>/dev/null
+```
+
+Find large files:
+
+```bash
+find /var -xdev -type f -size +500M -ls 2>/dev/null
+```
+
+---
+
+## Important
+
+Do not blindly delete:
+
+```text
+/var/log/*
+```
+
+from production.
+
+Follow your organization's log-retention and cleanup procedure.
+
+---
+
+# 24. Service Down Troubleshooting
+
+Suppose:
+
+```bash
+systemctl status myapp
+```
+
+shows:
+
+```text
+failed
+```
+
+Do not immediately restart.
+
+First:
+
+```bash
+journalctl -u myapp -n 100
+```
+
+Check:
+
+```bash
+systemctl cat myapp
+```
+
+Check:
+
+```bash
+systemctl show myapp
+```
+
+Check configuration.
+
+Check dependencies.
+
+Check ports.
+
+Check disk.
+
+Check permissions.
+
+Then decide the appropriate action.
+
+---
+
+# 25. Port Not Listening
+
+Suppose application should listen on:
+
+```text
+8080
+```
+
+Check:
+
+```bash
+ss -lntp | grep ':8080'
+```
+
+Nothing appears.
+
+Possible causes:
+
+- Application is not running
+- Wrong configuration
+- Application crashed
+- Wrong port
+- Binding only to localhost
+- Startup failed
+
+Check service:
+
+```bash
+systemctl status myapp
+```
+
+Check logs:
+
+```bash
+journalctl -u myapp -n 100
+```
+
+---
+
+# 26. Connection Refused
+
+Example:
+
+```text
+Connection refused
+```
+
+Meaning:
+
+The network path may have reached the destination, but the destination is not accepting the connection on that port.
+
+Check:
+
+```bash
+ss -lntp | grep ':8080'
+```
+
+Check service:
+
+```bash
+systemctl status myapp
+```
+
+Check firewall.
+
+Check application configuration.
+
+---
+
+# 27. Connection Timeout
+
+Example:
+
+```text
+Connection timed out
+```
+
+Possible causes:
+
+- Network issue
+- Firewall
+- Security group
+- Routing
+- Server unavailable
+- Wrong IP
+
+Test:
+
+```bash
+ping SERVER
+```
+
+Then:
+
+```bash
+nc -vz SERVER 8080
+```
+
+Check routes:
+
+```bash
+ip route
+```
+
+Check firewall/cloud network controls.
+
+---
+
+# 28. DNS Problems
+
+Suppose:
+
+```text
+curl https://api.company.internal
+```
+
+fails with a DNS-related error.
+
+Test:
+
+```bash
+dig api.company.internal
+```
+
+Then:
+
+```bash
+getent hosts api.company.internal
+```
+
+Check DNS configuration:
+
+```bash
+cat /etc/resolv.conf
+```
+
+On systems using systemd-resolved:
+
+```bash
+resolvectl status
+```
+
+---
+
+# 29. Permission Problems
+
+Example:
+
+```text
+Permission denied
+```
+
+Check:
+
+```bash
+ls -l file
+```
+
+Then:
+
+```bash
+id
+```
+
+Check directory permissions:
+
+```bash
+namei -l /path/to/file
+```
+
+This is useful because access to a file depends not only on the file itself but also on directory permissions along the path.
+
+Check ACLs if applicable:
+
+```bash
+getfacl file
+```
+
+---
+
+# 30. Application Log Errors
+
+Suppose logs show:
+
+```text
+ERROR Database connection failed
+```
+
+Do not immediately restart the application.
+
+Investigate:
+
+```text
+Application
+   ↓
+Database Host
+   ↓
+DNS
+   ↓
+Network
+   ↓
+Database Port
+   ↓
+Authentication
+   ↓
+Database
+```
+
+Test DNS:
+
+```bash
+getent hosts dbserver
+```
+
+Test port:
+
+```bash
+nc -vz dbserver 5432
+```
+
+For MySQL:
+
+```text
+3306
+```
+
+For PostgreSQL:
+
+```text
+5432
+```
+
+Then investigate credentials/configuration and database health according to the team's procedures.
+
+---
+
+# 31. Process Problems
+
+A process may:
+
+- Stop unexpectedly
+- Consume CPU
+- Consume memory
+- Become stuck
+- Spawn too many children
+- Hold a port
+- Hold files open
+
+Find process:
+
+```bash
+pgrep -af myapp
+```
+
+Check:
+
+```bash
+ps -p PID -o pid,ppid,user,%cpu,%mem,stat,etime,cmd
+```
+
+Check open files:
+
+```bash
+lsof -p PID
+```
+
+Check which process uses a port:
+
+```bash
+sudo lsof -i :8080
+```
+
+or:
+
+```bash
+ss -lntp | grep ':8080'
+```
+
+---
+
+# 32. Database Connectivity Problems
+
+Suppose:
+
+```text
+Application
+    |
+    X
+    |
+Database
+```
+
+First determine whether the problem is:
+
+```text
+DNS
+Network
+Port
+Authentication
+Database
+Application configuration
+```
+
+Check DNS:
+
+```bash
+getent hosts dbserver
+```
+
+Check port:
+
+```bash
+nc -vz dbserver 5432
+```
+
+Check application logs:
+
+```bash
+grep -i "database\|connection\|timeout" application.log
+```
+
+Do not assume that a database error means the database itself is down.
+
+---
+
+# 33. Slow Application Troubleshooting
+
+A slow application can have many causes.
+
+Start broad:
+
+```text
+Application Slow
+      |
+      +---- CPU?
+      |
+      +---- Memory?
+      |
+      +---- Disk?
+      |
+      +---- Network?
+      |
+      +---- Database?
+      |
+      +---- External API?
+      |
+      +---- Recent Deployment?
+      |
+      +---- Traffic Increase?
+```
+
+Check:
+
+```bash
+uptime
+```
+
+```bash
+top
+```
+
+```bash
+free -h
+```
+
+```bash
+df -h
+```
+
+```bash
+ss -s
+```
+
+Then investigate application logs and metrics.
+
+---
+
+# 34. Production Troubleshooting Example
+
+## Incident
+
+```text
+INC003421
+
+Customers are unable to place orders.
+
+Severity: High
+```
+
+Architecture:
+
+```text
+Customer
+   ↓
+Load Balancer
+   ↓
+Order Service
+   ↓
+Database
+```
+
+---
+
+## Step 1 — Confirm
+
+Try the application.
+
+Check monitoring.
+
+Check whether all users are affected.
+
+---
+
+## Step 2 — Connect
+
+```bash
+ssh supportuser@order-server
+```
+
+---
+
+## Step 3 — Check Server
+
+```bash
+hostname
+uptime
+```
+
+---
+
+## Step 4 — Check CPU
+
+```bash
+top
+```
+
+Result:
+
+```text
+CPU normal
+```
+
+Continue.
+
+---
+
+## Step 5 — Check Memory
+
+```bash
+free -h
+```
+
+Result:
+
+```text
+Memory normal
+```
+
+Continue.
+
+---
+
+## Step 6 — Check Disk
+
+```bash
+df -h
+```
+
+Result:
+
+```text
+/var = 98%
+```
+
+Investigate:
+
+```bash
+du -xhd1 /var 2>/dev/null
+```
+
+Result:
+
+```text
+/var/log = 45G
+```
+
+Investigate:
+
+```bash
+du -sh /var/log/*
+```
+
+Find a very large application log.
+
+---
+
+## Step 7 — Check Application
+
+```bash
+systemctl status order-service
+```
+
+Service is running.
+
+Check logs:
+
+```bash
+journalctl -u order-service -n 100
+```
+
+Logs show:
+
+```text
+No space left on device
+```
+
+---
+
+## Root Cause
+
+The application could not write required files because the filesystem was nearly full.
+
+---
+
+## Action
+
+Follow the approved production log-management procedure.
+
+Do not randomly delete files.
+
+After cleanup/rotation:
+
+```bash
+df -h
+```
+
+Then validate application health.
+
+---
+
+## Final Incident Update
+
+```text
+Incident: INC003421
+
+Issue:
+Customers were unable to place orders.
+
+Investigation:
+Application server was reachable and application service was running.
+CPU and memory were normal.
+
+Finding:
+The /var filesystem reached critical utilization.
+Application logs consumed most available disk space.
+
+Action:
+Approved log cleanup/rotation procedure was performed.
+
+Validation:
+Disk utilization returned to normal.
+Application health checks passed.
+Order creation was successfully validated.
+
+Status:
+Resolved.
+```
+
+This is a good example of evidence-based troubleshooting.
+
+---
+
+# 35. Troubleshooting Decision Tree
+
+Use this general decision tree:
+
+```text
+             Application Problem
+                    |
+                    ↓
+             Is server reachable?
+              /             \
+            NO               YES
+            |                 |
+       Network/Host       Check Server
+                              |
+                              ↓
+                       CPU / Memory / Disk
+                              |
+                              ↓
+                       Is process running?
+                         /          \
+                       NO            YES
+                       |              |
+                  Check Service    Check Port
+                                      |
+                                      ↓
+                              Is port listening?
+                                /          \
+                              NO            YES
+                              |              |
+                       Check App/Config   Check Network
+                                             |
+                                             ↓
+                                         Check DNS
+                                             |
+                                             ↓
+                                         Check Logs
+                                             |
+                                             ↓
+                                     Check Dependencies
+                                             |
+                                             ↓
+                                       Find Root Cause
+```
+
+---
+
+# 36. Important Linux Troubleshooting Commands
+
+## System
+
+```bash
+hostname
+hostnamectl
+uname -a
+cat /etc/os-release
+uptime
+```
+
+## CPU
+
+```bash
+top
+htop
+lscpu
+ps aux --sort=-%cpu | head
+```
+
+## Memory
+
+```bash
+free -h
+ps aux --sort=-%mem | head
+```
+
+## Disk
+
+```bash
+df -h
+df -i
+du -sh *
+find /var -type f -size +500M
+```
+
+## Processes
+
+```bash
+ps aux
+ps -ef
+pgrep -af process
+pidof process
+pstree
+```
+
+## Services
+
+```bash
+systemctl status service
+systemctl --failed
+journalctl -u service
+```
+
+## Network
+
+```bash
+ip addr
+ip route
+ping host
+ss -lntp
+ss -ant
+```
+
+## DNS
+
+```bash
+nslookup host
+dig host
+host host
+getent hosts host
+```
+
+## Files
+
+```bash
+ls -l
+stat file
+namei -l /path
+```
+
+## Logs
+
+```bash
+tail -f file.log
+less file.log
+grep "ERROR" file.log
+journalctl
+```
+
+## Open Files / Ports
+
+```bash
+lsof
+lsof -i :8080
+```
+
+---
+
+# 37. Practical Lab
+
+Create a Linux troubleshooting environment.
+
+Students should investigate:
+
+```text
+Server
+Application
+Service
+Network
+Disk
+Memory
+CPU
+Logs
+```
+
+---
+
+## Lab 1 — System Investigation
+
+Run:
+
+```bash
+hostname
+uptime
+uname -a
+cat /etc/os-release
+```
+
+Record the output.
+
+---
+
+## Lab 2 — CPU Investigation
+
+Run:
+
+```bash
+top
+```
+
+Then:
+
+```bash
+ps aux --sort=-%cpu | head
+```
+
+Identify the top CPU-consuming processes.
+
+---
+
+## Lab 3 — Memory Investigation
+
+Run:
+
+```bash
+free -h
+```
+
+Then:
+
+```bash
+ps aux --sort=-%mem | head
+```
+
+Identify the top memory-consuming processes.
+
+---
+
+## Lab 4 — Disk Investigation
+
+Run:
+
+```bash
+df -h
+```
+
+Then investigate:
+
+```bash
+du -xhd1 /var 2>/dev/null
+```
+
+---
+
+## Lab 5 — Service Investigation
+
+Choose a service:
+
+```bash
+systemctl status ssh
+```
+
+Then:
+
+```bash
+journalctl -u ssh -n 50
+```
+
+---
+
+## Lab 6 — Port Investigation
+
+Run:
+
+```bash
+ss -lntp
+```
+
+Identify:
+
+```text
+Port
+Process
+PID
+```
+
+---
+
+## Lab 7 — DNS Investigation
+
+Run:
+
+```bash
+dig example.com
+```
+
+Then:
+
+```bash
+getent hosts example.com
+```
+
+---
+
+## Lab 8 — Log Investigation
+
+Create:
+
+```bash
+echo "ERROR Database connection failed" > application.log
+```
+
+Search:
+
+```bash
+grep -i "error" application.log
+```
+
+---
+
+# 38. Production Incident Simulation
+
+## Scenario
+
+You are an Application Support Engineer.
+
+Monitoring reports:
+
+```text
+ALERT
+
+Payment Application
+Status: DOWN
+```
+
+Your task:
+
+### Step 1
+
+Connect to the server.
+
+```bash
+ssh supportuser@payment-server
+```
+
+### Step 2
+
+Check:
+
+```bash
+hostname
+uptime
+```
+
+### Step 3
+
+Check CPU:
+
+```bash
+top
+```
+
+### Step 4
+
+Check memory:
+
+```bash
+free -h
+```
+
+### Step 5
+
+Check disk:
+
+```bash
+df -h
+```
+
+### Step 6
+
+Check application service:
+
+```bash
+systemctl status payment-service
+```
+
+### Step 7
+
+Check port:
+
+```bash
+ss -lntp
+```
+
+### Step 8
+
+Check logs:
+
+```bash
+journalctl -u payment-service -n 100
+```
+
+### Step 9
+
+Identify root cause.
+
+### Step 10
+
+Take an approved corrective action.
+
+### Step 11
+
+Validate.
+
+### Step 12
+
+Document the incident.
+
+---
+
+# 39. Troubleshooting Ticket Template
+
+Use this format in Application Support tickets.
+
+```text
+Incident ID:
+Date/Time:
+Application:
+Server:
+Environment:
+Severity:
+Impact:
+
+Problem:
+<What is happening?>
+
+Symptoms:
+<List observed symptoms>
+
+Initial Checks:
+- Server:
+- CPU:
+- Memory:
+- Disk:
+- Process:
+- Service:
+- Port:
+- Network:
+- DNS:
+- Logs:
+
+Investigation:
+<What commands/checks were performed?>
+
+Findings:
+<What evidence was discovered?>
+
+Root Cause:
+<Actual cause>
+
+Action Taken:
+<What was changed/fixed?>
+
+Validation:
+<How was the fix verified?>
+
+Current Status:
+Resolved / Monitoring / Escalated
+
+Next Steps:
+<If any>
+
+Knowledge Article:
+<Reference if available>
+```
+
+---
+
+# 40. Practice Tasks
+
+## Beginner
+
+### Task 1
+
+Find Linux OS information.
+
+### Task 2
+
+Check system uptime.
+
+### Task 3
+
+Check CPU usage.
+
+### Task 4
+
+Check memory usage.
+
+### Task 5
+
+Check disk usage.
+
+### Task 6
+
+List running processes.
+
+### Task 7
+
+Check a service.
+
+### Task 8
+
+List listening ports.
+
+### Task 9
+
+Test DNS resolution.
+
+### Task 10
+
+Search a log file for errors.
+
+---
+
+# Intermediate Tasks
+
+### Task 11
+
+Find the process using the highest CPU.
+
+### Task 12
+
+Find the process using the highest memory.
+
+### Task 13
+
+Find which filesystem is above 80%.
+
+### Task 14
+
+Find the largest directories under `/var`.
+
+### Task 15
+
+Find which process is using port `8080`.
+
+### Task 16
+
+Check why a systemd service failed.
+
+### Task 17
+
+Find all occurrences of `ERROR` in an application log.
+
+### Task 18
+
+Test whether a remote server's port `443` is reachable.
+
+### Task 19
+
+Investigate a DNS resolution failure.
+
+### Task 20
+
+Investigate a permission denied error.
+
+---
+
+# Advanced Tasks
+
+### Task 21 — High CPU
+
+A server has:
+
+```text
+CPU = 95%
+```
+
+Investigate and write:
+
+```text
+Problem
+Evidence
+Process
+Possible Cause
+Action
+Validation
+```
+
+---
+
+### Task 22 — Disk Full
+
+A server has:
+
+```text
+/var = 100%
+```
+
+Investigate without blindly deleting files.
+
+---
+
+### Task 23 — Service Down
+
+A service is:
+
+```text
+failed
+```
+
+Find the reason using:
+
+```bash
+systemctl status service
+journalctl -u service
+```
+
+---
+
+### Task 24 — Port Problem
+
+Application should listen on:
+
+```text
+8080
+```
+
+but:
+
+```bash
+ss -lntp | grep ':8080'
+```
+
+returns nothing.
+
+Find the cause.
+
+---
+
+### Task 25 — Complete Incident
+
+Create a complete incident investigation for:
+
+```text
+Application unavailable
+```
+
+Use:
+
+```text
+SSH
+CPU
+Memory
+Disk
+Process
+Service
+Port
+Network
+DNS
+Logs
+```
+
+Document every step.
+
+---
+
+# 41. Common Troubleshooting Mistakes
+
+## Mistake 1 — Restarting Everything
+
+Bad approach:
+
+```text
+Problem
+↓
+Restart application
+↓
+Restart server
+↓
+Restart database
+```
+
+Why it is bad:
+
+- Root cause may remain
+- Evidence can disappear
+- Downtime may increase
+- Production impact can increase
+
+---
+
+# Mistake 2 — Deleting Logs Blindly
+
+Never do:
+
+```bash
+rm -rf /var/log/*
+```
+
+This can cause serious problems.
+
+Follow approved log rotation/cleanup procedures.
+
+---
+
+# Mistake 3 — Using `kill -9` Immediately
+
+Avoid:
+
+```bash
+kill -9 PID
+```
+
+unless there is a justified reason.
+
+Prefer graceful termination where appropriate:
+
+```bash
+kill -15 PID
+```
+
+---
+
+# Mistake 4 — Changing Permissions Randomly
+
+Avoid:
+
+```bash
+chmod -R 777 /application
+```
+
+This is a common but dangerous "fix."
+
+Find the actual ownership and permission requirement.
+
+---
+
+# Mistake 5 — Assuming Every Error is an Application Error
+
+A message like:
+
+```text
+Database connection failed
+```
+
+may actually be caused by:
+
+```text
+DNS
+Network
+Firewall
+Port
+Credentials
+Database
+```
+
+Always investigate the complete path.
+
+---
+
+# Mistake 6 — No Evidence
+
+Do not write:
+
+```text
+Issue fixed.
+```
+
+Write:
+
+```text
+Disk utilization reached 98%.
+Application logs consumed 45 GB.
+Approved log rotation was performed.
+Disk utilization reduced to 61%.
+Application health check passed.
+```
+
+Evidence makes troubleshooting professional.
+
+---
+
+# Mistake 7 — Ignoring Recent Changes
+
+Always ask:
+
+> What changed before the issue started?
+
+But verify the relationship rather than assuming causation.
+
+---
+
+# 42. Production Safety Rules
+
+Before making a production change:
+
+```text
+Understand the Problem
+        ↓
+Check Impact
+        ↓
+Check Change/Incident Process
+        ↓
+Take Backup if Required
+        ↓
+Perform Approved Action
+        ↓
+Validate
+        ↓
+Document
+```
+
+---
+
+## Rule 1
+
+Never execute commands you do not understand.
+
+---
+
+## Rule 2
+
+Be careful with:
+
+```bash
+rm
+chmod
+chown
+kill
+systemctl restart
+systemctl stop
+reboot
+```
+
+---
+
+## Rule 3
+
+Do not make production changes without authorization when your organization's process requires it.
+
+---
+
+## Rule 4
+
+Keep evidence before making destructive changes.
+
+---
+
+## Rule 5
+
+Validate after every corrective action.
+
+---
+
+## Rule 6
+
+Document what you did.
+
+---
+
+# 43. Quick Revision
+
+## Linux Troubleshooting Core Flow
+
+```text
+1. Understand Incident
+        ↓
+2. Confirm Problem
+        ↓
+3. Check Server
+        ↓
+4. Check CPU
+        ↓
+5. Check Memory
+        ↓
+6. Check Disk
+        ↓
+7. Check Processes
+        ↓
+8. Check Services
+        ↓
+9. Check Ports
+        ↓
+10. Check Network
+        ↓
+11. Check DNS
+        ↓
+12. Check Logs
+        ↓
+13. Check Permissions
+        ↓
+14. Check Configuration
+        ↓
+15. Check Recent Changes
+        ↓
+16. Identify Root Cause
+        ↓
+17. Fix Safely
+        ↓
+18. Validate
+        ↓
+19. Document
+```
+
+---
+
+## Most Important Commands
+
+```bash
+top
+free -h
+df -h
+df -i
+du -sh
+ps aux
+pgrep
+systemctl status
+journalctl
+ss -lntp
+ip addr
+ip route
+ping
+curl
+nc
+dig
+nslookup
+grep
+tail
+less
+lsof
+```
+
+---
+
+# 44. Learning Outcomes
+
+After completing this module, you should be able to:
+
+- Understand Linux troubleshooting
+- Follow a systematic troubleshooting process
+- Check server health
+- Check CPU utilization
+- Check memory utilization
+- Check disk utilization
+- Investigate processes
+- Investigate services
+- Check network connectivity
+- Check ports
+- Troubleshoot DNS
+- Analyze logs
+- Troubleshoot permissions
+- Troubleshoot environment issues
+- Investigate application failures
+- Investigate database connectivity
+- Troubleshoot high CPU
+- Troubleshoot high memory
+- Troubleshoot disk-full situations
+- Troubleshoot service failures
+- Troubleshoot connection errors
+- Investigate recent changes
+- Identify root causes
+- Perform safe corrective actions
+- Validate fixes
+- Document incidents professionally
+
+---
+
+# 45. Linux Fundamentals Complete
+
+🎉 **Congratulations!**
+
+You have completed the Linux Fundamentals module.
+
+The complete Linux learning path is:
+
+```text
+4.1 Linux Basics
+       ↓
+4.2 User & Group Management
+       ↓
+4.3 Permissions & Ownership
+       ↓
+4.4 Network Management
+       ↓
+4.5 Process & Task Management
+       ↓
+4.6 File & Directory Management
+       ↓
+4.7 Services & Systemd
+       ↓
+4.8 Package Management
+       ↓
+4.9 Environment Variables & Shell
+       ↓
+4.10 Shell Scripting
+       ↓
+4.11 SSH & Remote Server Management
+       ↓
+4.12 Linux Troubleshooting
+```
+
+---
+
+# 🎯 Final Application Support Mindset
+
+As an Application Support Engineer, don't memorize Linux commands randomly.
+
+Understand **why** you are using each command.
+
+For example:
+
+```text
+Application is slow
+        ↓
+Why?
+        ↓
+CPU?
+Memory?
+Disk?
+Network?
+Database?
+Application?
+        ↓
+Collect Evidence
+        ↓
+Find Root Cause
+        ↓
+Fix
+        ↓
+Validate
+        ↓
+Document
+```
+
+Linux is not just about commands.
+
+Linux troubleshooting is about **thinking logically, collecting evidence, narrowing the problem, and making safe decisions**.
+
+The most important skill is:
+
+> **Don't guess. Investigate.**
+
+---
+
+# 🚀 Linux Fundamentals — Module Complete
+
+You now have the foundation required to work with Linux servers in an Application Support environment.
+
+The next module can build on this foundation with topics such as:
+
+- Application architecture
+- Web servers
+- Application servers
+- Databases
+- Logs
+- APIs
+- HTTP/HTTPS
+- Application monitoring
+- Application health checks
+- Production troubleshooting
+- Deployment basics
+- End-to-end Application Support scenarios
