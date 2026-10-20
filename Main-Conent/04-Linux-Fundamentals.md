@@ -2667,69 +2667,129 @@ Linux Remote Management
         ↓
 Linux Troubleshooting
 ```
-
-The detailed hands-on learning will now happen inside the **12 separate Linux submodules** listed above.
-
 ## 📚 Linux Submodules
 
-The Linux Fundamentals module is divided into smaller submodules so that each topic can be learned and practiced separately.
+The detailed hands-on learning for **Linux Fundamentals** is divided into 12 separate submodules. Each submodule is maintained as an individual Markdown file.
 
 ### 4.1 Linux Basics
-Introduction to Linux commands, terminal, CLI, shells, Bash, command structure, paths, navigation, and basic Linux operations.
 
-➡️ [Go to Linux Basics](./4.1-Linux-Basics/README.md)
+Introduction to Linux, terminal, CLI, shells, Bash, command structure, paths, navigation, basic commands, and fundamental Linux operations.
+
+➡️ [Go to Linux Basics](./4.1-Linux-Basics.md)
 
 ### 4.2 User & Group Management
-Learn how Linux manages users and groups, including creating, modifying, deleting users/groups and managing memberships.
 
-➡️ [Go to User & Group Management](./4.2-User-Group-Management/README.md)
+Learn how Linux manages users and groups, including creating, modifying, deleting users and groups, managing memberships, primary and secondary groups, service accounts, and `sudo` access.
+
+➡️ [Go to User & Group Management](./4.2-User-Group-Management.md)
 
 ### 4.3 Permissions & Ownership
-Learn Linux file ownership, read/write/execute permissions, `chmod`, `chown`, `chgrp`, special permissions, and practical permission management.
 
-➡️ [Go to Permissions & Ownership](./4.3-Permissions-Ownership/README.md)
+Learn Linux file and directory ownership, read/write/execute permissions, `chmod`, `chown`, `chgrp`, `umask`, special permissions, ACLs, and practical permission management.
+
+➡️ [Go to Permissions & Ownership](./4.3-Permissions-Ownership.md)
 
 ### 4.4 Network Management
-Learn Linux networking fundamentals, IP addresses, interfaces, ports, DNS, connectivity testing, and basic network troubleshooting.
 
-➡️ [Go to Network Management](./4.4-Network-Management/README.md)
+Learn Linux networking fundamentals including network interfaces, IP addresses, MAC addresses, ports, TCP/UDP, DNS, routing, connectivity testing, NetworkManager, and basic network troubleshooting.
+
+➡️ [Go to Network Management](./4.4-Network-Management.md)
 
 ### 4.5 Process & Task Management
-Learn processes, jobs, foreground/background tasks, signals, process monitoring, killing processes, and cron jobs.
 
-➡️ [Go to Process & Task Management](./4.5-Process-Task-Management/README.md)
+Learn processes, PIDs, PPIDs, process states, foreground and background tasks, signals, process monitoring, `ps`, `top`, `htop`, `kill`, `jobs`, `fg`, `bg`, `nohup`, process priorities, and task management.
+
+➡️ [Go to Process & Task Management](./4.5-Process-Task-Management.md)
 
 ### 4.6 File & Directory Management
-Learn how to create, copy, move, rename, delete, search, and manage files and directories in Linux.
 
-➡️ [Go to File & Directory Management](./4.6-File-Directory-Management/README.md)
+Learn how Linux files and directories work and how to create, copy, move, rename, delete, search, inspect, archive, compress, and manage files and directories.
+
+➡️ [Go to File & Directory Management](./4.6-File-Directory-Management.md)
 
 ### 4.7 Services & Systemd
-Learn Linux services, systemd, service lifecycle, starting/stopping/restarting services, enabling services, and troubleshooting service failures.
 
-➡️ [Go to Services & Systemd](./4.7-Services-Systemd/README.md)
+Learn Linux services, daemons, `systemd`, `systemctl`, service lifecycle, starting/stopping/restarting services, enabling services at boot, `journalctl`, unit files, dependencies, and service troubleshooting.
+
+➡️ [Go to Services & Systemd](./4.7-Services-Systemd.md)
 
 ### 4.8 Package Management
-Learn how Linux software packages work and how to install, update, remove, and manage packages using package managers.
 
-➡️ [Go to Package Management](./4.8-Package-Management/README.md)
+Learn how Linux software packages work and how to search, install, update, upgrade, remove, and troubleshoot packages using APT, DNF/YUM, and RPM.
+
+➡️ [Go to Package Management](./4.8-Package-Management.md)
 
 ### 4.9 Environment Variables & Shell
-Learn environment variables, shell configuration, `PATH`, shell profiles, Bash configuration, and how applications use environment variables.
 
-➡️ [Go to Environment Variables & Shell](./4.9-Environment-Variables-Shell/README.md)
+Learn environment variables, shell variables, `PATH`, `export`, shell configuration files, `.bashrc`, `.profile`, aliases, shell startup behavior, environment inheritance, and how applications use environment variables.
+
+➡️ [Go to Environment Variables & Shell](./4.9-Environment-Variables-Shell.md)
 
 ### 4.10 Shell Scripting Fundamentals
-Learn Bash scripting fundamentals including variables, conditions, loops, functions, arguments, exit codes, and practical automation scripts.
 
-➡️ [Go to Shell Scripting Fundamentals](./4.10-Shell-Scripting/README.md)
+Learn Bash scripting fundamentals including variables, user input, command-line arguments, conditions, loops, functions, exit codes, pipes, redirection, logging, debugging, and practical automation scripts.
+
+➡️ [Go to Shell Scripting Fundamentals](./4.10-Shell-Scripting.md)
 
 ### 4.11 SSH, SCP & Remote Server Management
-Learn how Application Support engineers connect to Linux servers, transfer files, execute remote commands, and manage remote systems.
 
-➡️ [Go to SSH, SCP & Remote Server Management](./4.11-SSH-SCP-Remote-Management/README.md)
+Learn how Application Support and DevOps engineers securely connect to Linux servers, use SSH keys, execute remote commands, transfer files with SCP, synchronize files with `rsync`, use SFTP, work with jump servers, and troubleshoot remote access.
+
+➡️ [Go to SSH, SCP & Remote Server Management](./4.11-SSH-SCP-Remote-Management.md)
 
 ### 4.12 Linux Troubleshooting
-Learn a practical Linux troubleshooting methodology for CPU, memory, disk, network, processes, services, logs, and application issues.
 
-➡️ [Go to Linux Troubleshooting](./4.12-Linux-Troubleshooting/README.md)
+Learn a practical Linux troubleshooting methodology for CPU, memory, disk, processes, services, ports, networking, DNS, permissions, logs, application failures, database connectivity, and production incidents.
+
+➡️ [Go to Linux Troubleshooting](./4.12-Linux-Troubleshooting.md)
+
+---
+
+## 🗂️ Linux Folder Structure
+
+```text
+Main-Conent/
+└── Linux/
+    ├── 4.1-Linux-Basics.md
+    ├── 4.2-User-Group-Management.md
+    ├── 4.3-Permissions-Ownership.md
+    ├── 4.4-Network-Management.md
+    ├── 4.5-Process-Task-Management.md
+    ├── 4.6-File-Directory-Management.md
+    ├── 4.7-Services-Systemd.md
+    ├── 4.8-Package-Management.md
+    ├── 4.9-Environment-Variables-Shell.md
+    ├── 4.10-Shell-Scripting.md
+    ├── 4.11-SSH-SCP-Remote-Management.md
+    └── 4.12-Linux-Troubleshooting.md
+```
+
+## 🎯 Recommended Learning Order
+
+```text
+4.1 Linux Basics
+       ↓
+4.2 User & Group Management
+       ↓
+4.3 Permissions & Ownership
+       ↓
+4.4 Network Management
+       ↓
+4.5 Process & Task Management
+       ↓
+4.6 File & Directory Management
+       ↓
+4.7 Services & Systemd
+       ↓
+4.8 Package Management
+       ↓
+4.9 Environment Variables & Shell
+       ↓
+4.10 Shell Scripting
+       ↓
+4.11 SSH & Remote Server Management
+       ↓
+4.12 Linux Troubleshooting
+```
+
+> **Learning approach:** Complete the theory, practice the commands on a Linux system, complete the practical exercises, and then move to the next submodule.
